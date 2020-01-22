@@ -243,4 +243,58 @@ public class Review {
       }
       return fake; 
    }
+   public static String fakeReviewStronger(String fileName)
+   {
+      String review = textToString(fileName);
+      String fake = ""; 
+      for(int i = 0; i < review.length()-1; i++)
+      {
+         if(review.substring(i, i+1).equals("*"))
+         {
+            i++;
+            String replace = "";
+            boolean isWord = true;
+            while(isWord)
+            {
+               replace += review.substring(i, i+1);
+               i++;
+               if(review.substring(i, i+1).equals(" "))
+               {
+                  isWord = false;
+               }
+            }
+            replace = replace.replaceAll("\\p{Punct}", "");
+            if(sentimentVal(replace) > 0)
+            {
+               String word = replace;
+               replace = randomPositiveAdj();
+               while(sentimentVal(replace) < sentimentVal(word))
+               {
+                  replace = randomPositiveAdj();
+               }
+               replace += " ";
+            }
+            else if (sentimentVal(replace) < 0)
+            {
+               String word = replace;
+               replace = randomNegativeAdj();
+               while(sentimentVal(replace) > sentimentVal(word))
+               {
+                  replace = randomNegativeAdj();
+               }
+               replace += " ";
+            }
+            else 
+            {
+               replace = randomAdjective() + " ";
+            }
+            fake += replace;
+         }
+         else
+         {
+            fake += review.substring(i, i+1);
+         }
+      }
+      return fake; 
+   }
 }
